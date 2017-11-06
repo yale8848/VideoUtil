@@ -1,4 +1,6 @@
 .idea
 *.exe
 !ffmpeg.exe
+!7za.exe
+!VideoUtil.exe
 
