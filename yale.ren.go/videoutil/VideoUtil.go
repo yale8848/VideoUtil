@@ -58,10 +58,16 @@ func destorytemp(path string) {
 
 }
 func exe(src string,dest string,chanel chan  bool)  {
-
+	dir, err1 := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err1 != nil {
+		fmt.Println(err1)
+		return
+	}
+	fmt.Println(dir)
 	//cmd:=exec.Command("ffmpeg.exe","-i 1-1.mp4 -b:v 100k -r 15 -bufsize 100k -x264opts keyint=25 1-1_.mp4")
-	cmd:=exec.Command("ffmpeg.exe","-i",src,"-x264opts","keyint=25",dest)
-
+	//cmd:=exec.Command("ffmpeg.exe","-i",src, "-b:v", "100k", "-r", "15", "-bufsize", "100k" ,"-x264opts", "keyint=25", dest)
+	cmd:=exec.Command(dir+"\\"+"ffmpeg.exe","-i",src, "-b:v", "100k","-bufsize", "100k" ,"-x264opts", "keyint=25", dest)
+	//cmd:=exec.Command("ffmpeg.exe","-i",src,"-x264opts","keyint=25",dest)
 	//cmd:=exec.Command("t.exe",src,dest)
 	_,err:=cmd.Output()
 	if err!=nil{
@@ -83,11 +89,11 @@ func (w *myMainWindow) start_convert(base string,items []string)  {
 	remove_dir(output)
 	os.Mkdir(output,os.ModePerm)
 	for i,v:= range items{
-		w.label.SetText(fmt.Sprintf("[正在处理]  %s   %d/%d",v,i+1,len(items)))
-		w.set_listitem(i,"[正在处理...]   "+v)
+		w.label.SetText(fmt.Sprintf(" [正在处理]    %s    (%d/%d)",v,i+1,len(items)))
+		w.set_listitem(i," [正在处理...]            "+v)
 		go exe(add_basePath(base,v),add_basePath(output,v),channel)
 		<-channel
-		w.set_listitem(i,"处理完毕... "+v)
+		w.set_listitem(i," 处理完毕...           "+v)
 	}
 	w.label.SetText("全部处理完毕")
 	fmt.Println(output)
@@ -153,7 +159,7 @@ func (w *myMainWindow) fd_choseForlder() error {
 func main() {
 	mw := MainWindow{
 		AssignTo:&mainWindow.MainWindow,
-		Title:   "视频处理",
+		Title:   "视频处理(导学号)",
 		MinSize: Size{600, 600},
 		Layout:  VBox{},
 		Children: []Widget{
