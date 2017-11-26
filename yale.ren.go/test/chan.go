@@ -3,29 +3,35 @@ package main
 import (
 	"fmt"
 	"time"
+	"strconv"
 )
 
 var ch = make(chan int)
 
 func test()  {
-
-	time.Sleep(3*time.Second)
-
-	ch<-1
-	v :=<- ch
-	fmt.Println(v)
-
-	ch<-2
+	for i:=0;;i++{
+		time.Sleep(3*time.Second)
+		fmt.Println("send "+strconv.Itoa(i))
+		ch<-i
+	}
 }
-
+func test1()  {
+	time.Sleep(3*time.Second)
+	//fmt.Println(<-ch)
+}
 func main()  {
-	//ch<-2
+	go test1()
+	ch<-2
+
+
+}
+func main1()  {
 	go test()
 
-	fmt.Println("aa")
-
-	v :=<- ch
-	fmt.Println(v)
+    for {
+		v :=<- ch
+		fmt.Println("receive "+strconv.Itoa(v))
+	}
 
 
 	fmt.Println("bb")

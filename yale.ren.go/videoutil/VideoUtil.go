@@ -64,6 +64,10 @@ func exe(src string,dest string,chanel chan  bool)  {
 		return
 	}
 	fmt.Println(dir)
+	//11025 22050 44100
+	//ffmpeg.exe -i L1.mp3 -ar 22050 -ac 1 1.mp3
+
+
 	//cmd:=exec.Command("ffmpeg.exe","-i 1-1.mp4 -b:v 100k -r 15 -bufsize 100k -x264opts keyint=25 1-1_.mp4")
 	//cmd:=exec.Command("ffmpeg.exe","-i",src, "-b:v", "100k", "-r", "15", "-bufsize", "100k" ,"-x264opts", "keyint=25", dest)
 	cmd:=exec.Command(dir+"\\"+"ffmpeg.exe","-i",src, "-b:v", "100k","-bufsize", "100k" ,"-x264opts", "keyint=25", dest)
