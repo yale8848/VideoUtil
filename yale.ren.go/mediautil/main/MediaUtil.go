@@ -93,9 +93,9 @@ func exe(src string, dest string, isAudio bool, ch chan bool) {
 	}
 	var cmd *exec.Cmd
 	if isAudio {
-		cmd = exec.Command(dir+util.FILE_SEP+"ffmpeg.exe", "-i", src, "-ar", "11025", "-ac", "1", dest)
+		cmd = exec.Command(dir+util.FILE_SEP+"ffmpeg.exe", "-i", src, "-ar", "22050", "-ac", "1", dest)
 	} else {
-		cmd = exec.Command(dir+util.FILE_SEP+"ffmpeg.exe", "-i", src, "-minrate", "100k", "-b:v", "150k", "-maxrate", "200k", "-bufsize", "150k", "-r", "15", "-x264opts", "keyint=15", "-ar", "11025", "-ac", "1", dest)
+		cmd = exec.Command(dir+util.FILE_SEP+"ffmpeg.exe", "-i", src, "-minrate", "100k", "-b:v", "150k", "-maxrate", "200k", "-bufsize", "150k", "-r", "12", "-x264opts", "keyint=15", "-ar", "22050", "-ac", "1", dest)
 	}
 	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 	_, err := cmd.Output()
