@@ -22,10 +22,11 @@ type envModel struct {
 
 type myMainWindow struct {
 	*walk.MainWindow
-	lb    *walk.ListBox
-	label *walk.Label
-	model *envModel
-	btn   *walk.PushButton
+	lb       *walk.ListBox
+	label    *walk.Label
+	model    *envModel
+	btn      *walk.PushButton
+	rootPath string
 }
 
 func (m *envModel) ItemCount() int {
@@ -50,6 +51,7 @@ func (w *myMainWindow) showMediaFiles(path string) {
 	lists.Iterator(func(i interface{}, i2 int) {
 		fmt.Println(i.(string))
 	})
+	w.btn.SetEnabled(false)
 	w.preDeal(lists)
 	go w.startConvert(lists)
 }
@@ -92,7 +94,7 @@ func exe(src string, dest string, isAudio bool, ch chan bool) {
 	if isAudio {
 		cmd = exec.Command(dir+util.FILE_SEP+"ffmpeg.exe", "-i", src, "-ar", "11025", "-ac", "1", dest)
 	} else {
-		cmd = exec.Command(dir+util.FILE_SEP+"ffmpeg.exe", "-i", src, "-b:v", "100k", "-bufsize", "100k", "-x264opts", "keyint=25", "-ar", "11025", "-ac", "1", dest)
+		cmd = exec.Command(dir+util.FILE_SEP+"ffmpeg.exe", "-i", src, "-minrate", "100k", "-b:v", "150k", "-maxrate", "200k", "-bufsize", "150k", "-r", "15", "-x264opts", "keyint=15", "-ar", "11025", "-ac", "1", dest)
 	}
 	_, err := cmd.Output()
 	if err != nil {
@@ -107,6 +109,11 @@ func (w *myMainWindow) setListitem(i int, text string) {
 	w.model.list.SetByIndex(i, text)
 	w.lb.SetModel(w.model)
 }
+
+func (w *myMainWindow) getOutPutText(src, out string) string {
+
+	return " [处理完成...] " + src + " [输出] " + out
+}
 func (w *myMainWindow) startConvert(list *util.ListExt) {
 	if list.Len() == 0 {
 		return
@@ -117,10 +124,11 @@ func (w *myMainWindow) startConvert(list *util.ListExt) {
 		outf := getOutPutFileName(p)
 
 		w.label.SetText(fmt.Sprintf(" [正在处理]    %s    (%d/%d)", p, pos+1, list.Len()))
-		w.setListitem(pos, " [正在处理...]            "+p)
+		w.setListitem(pos, " [正在处理...] "+p)
 		go exe(p, outf, util.IsAudio(p), channel)
 		<-channel
-		w.setListitem(pos, " [处理完成...]            "+p)
+
+		w.setListitem(pos, w.getOutPutText(p, outf))
 	})
 	w.label.SetText("全部处理完毕")
 }
@@ -138,19 +146,20 @@ func (w *myMainWindow) choseFloder() error {
 		return nil
 	}
 	w.showMediaFiles(dlg.FilePath)
+	w.rootPath = dlg.FilePath
 	return nil
 }
 
 func createWindow() {
 	mw := MainWindow{
 		AssignTo: &mainWindow.MainWindow,
-		Title:    "视频处理(导学号)",
+		Title:    "多媒体文件处理(导学号)",
 		MinSize:  Size{600, 600},
 		Layout:   VBox{},
 		Children: []Widget{
 
 			Label{
-				Text: "处理完后的视频都在本目录的output_dxh目录里，最好在本地把每一个视频打开都看看",
+				Text: "处理完后的文件都每一层目录的output_dxh目录里，最好在本地把每一个视频打开都看看",
 			},
 			PushButton{
 				AssignTo: &mainWindow.btn,

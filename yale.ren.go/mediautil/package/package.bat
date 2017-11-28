@@ -1,0 +1,1 @@
+7za.exe a -tzip .\output\MediaUtil.zip ..\main\*.exe  ..\main\*.manifest
