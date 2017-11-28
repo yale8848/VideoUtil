@@ -74,7 +74,7 @@ func List2ArrayString(list *list.List) []string {
 	return items
 }
 func CreateDir(p string) {
-	os.Mkdir(p, os.ModePerm)
+	os.MkdirAll(p, os.ModePerm)
 }
 func GetCurrentFileDir(p string) (string, bool) {
 	pos := strings.LastIndex(p, FILE_SEP)
