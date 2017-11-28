@@ -161,7 +161,7 @@ func (w *myMainWindow) choseFloder() error {
 func createWindow() {
 	mw := MainWindow{
 		AssignTo: &mainWindow.MainWindow,
-		Title:    "多媒体文件处理(导学号)",
+		Title:    "导学号多媒体文件处理V1.1",
 		MinSize:  Size{600, 600},
 		Layout:   VBox{},
 		Children: []Widget{
