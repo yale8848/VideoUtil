@@ -1,1 +1,1 @@
-7za.exe a -tzip .\output\VideoUtil.zip ..\videoutil\*.exe  ..\videoutil\*.manifest
+7za.exe a -tzip .\output\VideoUtil-V1.3.zip ..\videoutil\*.exe  ..\videoutil\*.manifest
